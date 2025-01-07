@@ -96,11 +96,13 @@ async fn main() {
 
     let mut entities = vec![
         // cucas
-        Entity { x: 8.0, y: 2.0, texture: entity_texture.clone() },
+        Entity { x: 8.0, y: 2.0, texture: entity_texture.clone() }
     ];
 
     loop {
         clear_background(BLACK);
+
+        entities[0].moveEntity();
 
         let screen_width = screen_width();
         let screen_height = screen_height();
@@ -234,10 +236,13 @@ async fn main() {
             // Ignorar entidades fuera del rango visible
             if distance < max_depth {
                 let angle_to_entity = (entity.y - player.y).atan2(entity.x - player.x);
-                let angle_diff = (angle_to_entity - player.angle + std::f32::consts::PI) % (2.0 * std::f32::consts::PI) - std::f32::consts::PI;
+                let angle_diff =
+                    ((angle_to_entity - player.angle + std::f32::consts::PI) %
+                        (2.0 * std::f32::consts::PI)) -
+                    std::f32::consts::PI;
 
                 // Si la entidad está dentro del FOV
-                if angle_diff.abs() < FOV / 2.0 {
+                if angle_diff.abs() < FOV / 1.8 {  // 2.0
                     let size = screen_height / distance; // Tamaño relativo al jugador
                     let screen_x =
                         screen_width / 2.0 + (angle_diff / (FOV / 2.0)) * (screen_width / 2.0);
@@ -263,23 +268,11 @@ async fn main() {
 
         vector_render.sort_by(|a, b| b.distance.partial_cmp(&a.distance).unwrap());
 
-
         for obj in &vector_render {
-            if obj.wall {
-                if let Some(entity) = &obj.render_wall {
-                    render(entity);
-                } else {
-                    // Si no tiene entidad, puedes decidir qué hacer
-                    println!("No entity to render");
-                }
-            } else {
-                // Verificar si render_entity es Some o None
-                if let Some(entity) = &obj.render_entity {
-                    render_entity(entity);
-                } else {
-                    // Si no tiene entidad, puedes decidir qué hacer
-                    println!("No entity to render");
-                }
+            if let Some(entity) = &obj.render_wall {
+                render(entity);
+            }else if let Some(entity) = &obj.render_entity {
+                render_entity(entity);
             }
         }
 
@@ -313,7 +306,7 @@ async fn main() {
         draw_text(&format!("FPS: {}", get_fps()), 10.0, 20.0, 30.0, BLACK);
         draw_text(&format!("X: {}\n", player.x.round()), 10.0, 50.0, 30.0, BLACK);
         draw_text(&format!("Y: {}", player.y.round()), 10.0, 80.0, 30.0, BLACK);
-        
+
         next_frame().await;
     }
 }
