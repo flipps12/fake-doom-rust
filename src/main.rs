@@ -1,3 +1,5 @@
+use std::process::exit;
+
 use macroquad::prelude::*;
 
 mod entity;
@@ -74,25 +76,30 @@ pub const MAP: [[i32; 20]; 20] = [
 
 #[macroquad::main("Fake doom")]
 async fn main() {
-    set_window_size(800, 600);
+    // Window settings
+    //set_fullscreen(true);
+    show_mouse(false);
+    set_cursor_grab(true);
 
-    const FOV: f32 = std::f32::consts::PI / 4.0; // Campo de visión
+    // Load textures
     let texture_pared = load_texture("assets/pared.png").await.unwrap();
     texture_pared.set_filter(FilterMode::Nearest);
-
     let texture_techo = load_texture("assets/techo.png").await.unwrap();
     texture_techo.set_filter(FilterMode::Nearest);
     let texture_piso = load_texture("assets/piso.png").await.unwrap();
     texture_piso.set_filter(FilterMode::Nearest);
-
-    let mut player = Player {
-        x: 2.0, // Posición inicial en el mapa
-        y: 2.0,
-        angle: 0.0, // Dirección inicial
-    };
-
     let entity_texture = load_texture("assets/cucas.png").await.unwrap();
     entity_texture.set_filter(FilterMode::Nearest);
+
+    let mut player = Player {
+        x: 2.0,
+        y: 2.0,
+        angle: 0.0,
+    };
+
+    const FOV: f32 = std::f32::consts::PI / 4.0; // Campo de visión
+
+    let mut last_mouse_x = screen_width() / 2.0;
 
     let mut entities = vec![
         // cucas
@@ -100,14 +107,13 @@ async fn main() {
     ];
 
     loop {
+        // Reset
         clear_background(BLACK);
 
         entities[0].move_entity(player.x, player.y);
 
         let screen_width = screen_width();
         let screen_height = screen_height();
-
-        // entities[0].x += 0.03;
 
         draw_texture_ex(
             &texture_techo,
@@ -277,7 +283,7 @@ async fn main() {
             }
         }
 
-        // Movimiento del jugador (WASD)
+        // Movement
         if is_key_down(KeyCode::W) {
             let new_x = player.x + player.angle.cos() * 0.1;
             let new_y = player.y + player.angle.sin() * 0.1;
@@ -297,16 +303,26 @@ async fn main() {
                 player.y = new_y;
             }
         }
+        // Manipulating Angle
         if is_key_down(KeyCode::A) {
             player.angle -= 0.05;
         }
         if is_key_down(KeyCode::D) {
             player.angle += 0.05;
         }
+        // Manipulating Angle with Mouse
+        let (mouse_x, _mouse_y) = mouse_position();
+        let delta_x = mouse_x - last_mouse_x;
+        player.angle += delta_x * 0.0025;
+        last_mouse_x = mouse_x;
 
         draw_text(&format!("FPS: {}", get_fps()), 10.0, 20.0, 30.0, BLACK);
         draw_text(&format!("X: {}\n", player.x.round()), 10.0, 50.0, 30.0, BLACK);
         draw_text(&format!("Y: {}", player.y.round()), 10.0, 80.0, 30.0, BLACK);
+
+        if is_key_down(KeyCode::Escape) {
+            exit(0)
+        }
 
         next_frame().await;
     }
