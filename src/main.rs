@@ -26,7 +26,6 @@ struct RenderWalls<'a> {
 }
 
 struct RenderEntity<'a> {
-    distance: f32,
     texture: &'a Texture2D,
     screen_x: f32, // Posición en pantalla
     screen_y: f32,
@@ -92,7 +91,7 @@ async fn main() {
         y: 2.0,
         angle: 0.0,
     };
-
+    
     const FOV: f32 = std::f32::consts::PI / 4.0; // Campo de visión
 
     let mut last_mouse_x = screen_width() / 2.0;
@@ -117,16 +116,10 @@ async fn main() {
 
             // Medir el texto
             let text_dimensions = measure_text(text, None, font_size, 1.0);
-    
+
             // Coordenadas centradas
             let text_x = (screen_width - text_dimensions.width) / 2.0;
-            draw_text(
-                &format!("{}", text),
-                text_x,
-                screen_height / 4.0,
-                font_size as f32,
-                WHITE
-            );
+            draw_text(&format!("{}", text), text_x, screen_height / 4.0, font_size as f32, WHITE);
 
             if is_key_down(KeyCode::Enter) {
                 show_mouse(false);
@@ -182,7 +175,7 @@ async fn main() {
                 let delta_dist_y = if eye_y != 0.0 { (1.0 / eye_y).abs() } else { f32::INFINITY };
 
                 // Determina el paso y la primera intersección
-                let mut step_x = 0;
+                let step_x;
                 let mut side_dist_x = if eye_x < 0.0 {
                     step_x = -1;
                     player.x.fract() * delta_dist_x
@@ -191,7 +184,7 @@ async fn main() {
                     (1.0 - player.x.fract()) * delta_dist_x
                 };
 
-                let mut step_y = 0;
+                let step_y;
                 let mut side_dist_y = if eye_y < 0.0 {
                     step_y = -1;
                     player.y.fract() * delta_dist_y
@@ -263,12 +256,12 @@ async fn main() {
                 if distance < max_depth {
                     let angle_to_entity = (entity.y - player.y).atan2(entity.x - player.x);
                     let angle_diff =
-                        ((angle_to_entity - player.angle + std::f32::consts::PI) %
-                            (2.0 * std::f32::consts::PI)) -
-                        std::f32::consts::PI;
+                        (angle_to_entity - player.angle + std::f32::consts::PI).rem_euclid(
+                            2.0 * std::f32::consts::PI
+                        ) - std::f32::consts::PI;
 
                     // Si la entidad está dentro del FOV
-                    if angle_diff.abs() < FOV / 1.8 {
+                    if angle_diff.abs() < FOV / 2.0 {
                         // 2.0
                         let size = screen_height / distance; // Tamaño relativo al jugador
                         let screen_x =
@@ -279,7 +272,6 @@ async fn main() {
                                 None,
                                 Some(
                                     Box::new(RenderEntity {
-                                        distance,
                                         texture: &entity.texture,
                                         screen_x,
                                         screen_y: screen_height / 2.0, // Ajustar según diseño
@@ -338,6 +330,13 @@ async fn main() {
             draw_text(&format!("FPS: {}", get_fps()), 10.0, 20.0, 30.0, BLACK);
             draw_text(&format!("X: {}\n", player.x.round()), 10.0, 50.0, 30.0, BLACK);
             draw_text(&format!("Y: {}", player.y.round()), 10.0, 80.0, 30.0, BLACK);
+            draw_text(
+                &format!("X: {} Y: {}", entities[0].x, entities[0].y),
+                10.0,
+                110.0,
+                30.0,
+                BLACK
+            );
         }
 
         if is_key_down(KeyCode::Escape) {

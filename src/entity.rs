@@ -1,6 +1,5 @@
 use crate::MAP;
 use macroquad::texture::Texture2D;
-use std::f32::consts::PI;
 
 pub struct Player {
     pub x: f32,
@@ -26,8 +25,8 @@ impl Entity {
 
         self.angle = angle;
         
-        let new_x = self.x + self.angle.cos() * 0.03;
-        let new_y = self.y + self.angle.sin() * 0.03;
+        let new_x = self.x + self.angle.cos() * 0.03 * 0.1;
+        let new_y = self.y + self.angle.sin() * 0.03 * 0.1;
 
         // Verificar colisiones
         if MAP[new_y as usize][new_x as usize] == 0 {
