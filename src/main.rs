@@ -3,48 +3,11 @@ use std::process::exit;
 use macroquad::prelude::*;
 
 mod entity;
+mod render;
 
 use entity::{ Player, Entity };
+use render::{ render, render_entity, RenderObjects, RenderWalls, RenderEntity };
 
-struct RenderObjects<'a> {
-    distance: f32,
-    render_wall: Option<RenderWalls<'a>>,
-    render_entity: Option<Box<RenderEntity<'a>>>,
-}
-
-struct RenderWalls<'a> {
-    distance: f32,
-    player: &'a Player,
-    ray_angle: f32,
-    eye_x: f32,
-    eye_y: f32,
-    hit_vertical: bool,
-    texture: Texture2D,
-    i: usize,
-    line_width: f32,
-    screen_height: f32,
-}
-
-struct RenderEntity<'a> {
-    texture: &'a Texture2D,
-    screen_x: f32, // Posición en pantalla
-    screen_y: f32,
-    size: f32, // Tamaño del sprite en pantalla
-}
-
-impl<'a> RenderObjects<'a> {
-    fn new(
-        distance: f32,
-        render_wall: Option<RenderWalls<'a>>,
-        render_entity: Option<Box<RenderEntity<'a>>>
-    ) -> Self {
-        RenderObjects {
-            distance,
-            render_wall,
-            render_entity,
-        }
-    }
-}
 
 pub const MAP: [[i32; 20]; 20] = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -349,53 +312,8 @@ async fn main() {
     }
 }
 
-fn render(obj: &RenderWalls) {
-    let corrected_distance = obj.distance * (obj.player.angle - obj.ray_angle).cos();
-    let line_height = obj.screen_height / corrected_distance;
-    let line_start = (obj.screen_height - line_height) / 2.0;
 
-    // Calcula la textura correcta
-    let hit_x = obj.player.x + obj.eye_x * obj.distance;
-    let hit_y = obj.player.y + obj.eye_y * obj.distance;
-    let texture_offset = if obj.hit_vertical { hit_y.fract() } else { hit_x.fract() };
-
-    let shade = 1.0 / (1.0 + obj.distance.powi(2) * 0.01);
-    let color = Color::new(shade, shade, shade, 1.0);
-
-    draw_texture_ex(
-        &obj.texture,
-        (obj.i as f32) * obj.line_width,
-        line_start,
-        color,
-        DrawTextureParams {
-            source: Some(
-                Rect::new(
-                    texture_offset * (obj.texture.width() as f32),
-                    0.0,
-                    obj.line_width,
-                    obj.texture.height() as f32
-                )
-            ),
-            dest_size: Some(Vec2::new(obj.line_width, line_height)),
-            ..Default::default()
-        }
-    );
-}
 
 fn calculate_distance(player: &Player, entity: &Entity) -> f32 {
     ((entity.x - player.x).powi(2) + (entity.y - player.y).powi(2)).sqrt()
-}
-
-fn render_entity(obj: &RenderEntity) {
-    let color = Color::new(1.0, 1.0, 1.0, 1.0); // Color sin sombreado
-    draw_texture_ex(
-        obj.texture,
-        obj.screen_x - obj.size / 2.0, // Centra el sprite
-        obj.screen_y - obj.size / 2.0,
-        color,
-        DrawTextureParams {
-            dest_size: Some(Vec2::new(obj.size, obj.size)),
-            ..Default::default()
-        }
-    );
 }
