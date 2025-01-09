@@ -98,7 +98,7 @@ async fn main() {
 
     let mut entities = vec![
         // cucas
-        Entity { x: 8.0, y: 2.0, angle: 1.0, texture: entity_texture.clone() }
+        Entity { x: 8.8, y: 2.0, angle: 1.0, texture: entity_texture.clone() },
     ];
 
     let mut menu = true;
@@ -127,7 +127,9 @@ async fn main() {
                 menu = false;
             }
         } else {
-            entities[0].move_entity(player.x, player.y);
+            for entity in &mut entities {
+                entity.move_entity(player.x, player.y);
+            }
 
             draw_texture_ex(
                 &texture_techo,
@@ -152,7 +154,7 @@ async fn main() {
             );
 
             // Lanza rayos en un campo de visión
-            let num_rays = (screen_width * 3.0) as usize; // Aumenta el número de rayos
+            let num_rays = (screen_width * 1.0) as usize; // Aumenta el número de rayos
             let max_depth = 18.0;
             let line_width = screen_width / (num_rays as f32);
             let mut texture = texture_pared.clone();
@@ -261,7 +263,7 @@ async fn main() {
                         ) - std::f32::consts::PI;
 
                     // Si la entidad está dentro del FOV
-                    if angle_diff.abs() < FOV / 2.0 {
+                    if angle_diff.abs() < FOV / 1.2 {
                         // 2.0
                         let size = screen_height / distance; // Tamaño relativo al jugador
                         let screen_x =
@@ -331,7 +333,7 @@ async fn main() {
             draw_text(&format!("X: {}\n", player.x.round()), 10.0, 50.0, 30.0, BLACK);
             draw_text(&format!("Y: {}", player.y.round()), 10.0, 80.0, 30.0, BLACK);
             draw_text(
-                &format!("X: {} Y: {}", entities[0].x, entities[0].y),
+                &format!("X: {} Y: {}", entities[0].x.round(), entities[0].y.round()),
                 10.0,
                 110.0,
                 30.0,
