@@ -10,26 +10,26 @@ use render::{ render, render_entity, RenderObjects, RenderWalls, RenderEntity };
 
 
 pub const MAP: [[i32; 20]; 20] = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1],
-    [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
-    [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [19, 18, 17, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
+    [19, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 15],
+    [18, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 15, 00, 15],
+    [18, 00, 00, 19, 18, 17, 16, 15, 15, 15, 15, 15, 00, 15, 15, 00, 00, 15, 00, 15],
+    [17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 15],
+    [17, 00, 00, 00, 15, 15, 15, 15, 15, 15, 15, 00, 00, 00, 00, 00, 00, 15, 00, 15],
+    [16, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 15, 00, 15],
+    [16, 15, 15, 00, 00, 15, 15, 15, 15, 15, 15, 00, 15, 15, 00, 00, 00, 15, 00, 15],
+    [17, 00, 15, 00, 15, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 15, 00, 15],
+    [17, 00, 15, 00, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 00, 00, 00, 15, 00, 15],
+    [16, 00, 15, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 15, 00, 00, 00, 00, 15],
+    [16, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 15, 00, 00, 00, 00, 00, 00, 15],
+    [16, 00, 00, 15, 15, 15, 15, 00, 00, 00, 15, 00, 15, 00, 15, 15, 15, 15, 00, 15],
+    [17, 00, 15, 15, 00, 00, 15, 15, 15, 00, 15, 00, 15, 00, 15, 00, 00, 00, 00, 15],
+    [17, 00, 00, 15, 00, 00, 00, 00, 15, 00, 00, 00, 15, 15, 15, 00, 00, 00, 00, 15],
+    [18, 00, 00, 15, 00, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15],
+    [18, 00, 00, 15, 00, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 00, 15, 15, 15],
+    [19, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 00, 00, 15],
+    [19, 00, 00, 00, 00, 00, 15, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 00, 00, 15],
+    [15, 19, 18, 17, 16, 15, 13, 12, 11, 11, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
 ];
 
 #[macroquad::main("Fake doom")]
@@ -94,11 +94,12 @@ async fn main() {
                 entity.move_entity(player.x, player.y);
             }
 
+            let color: Color = Color::new(0.7, 0.7, 0.7, 1.0); // Color sin sombreado
             draw_texture_ex(
                 &texture_techo,
                 0.0,
                 0.0,
-                WHITE, // Color base
+                color, // Color base
                 DrawTextureParams {
                     dest_size: Some(Vec2::new(screen_width, screen_height / 2.0)), // Escalar textura a la pared
                     ..Default::default()
@@ -109,7 +110,7 @@ async fn main() {
                 &texture_piso,
                 0.0,
                 screen_height / 2.0,
-                WHITE, // Color base
+                color, // Color base
                 DrawTextureParams {
                     dest_size: Some(Vec2::new(screen_width, screen_height / 2.0)), // Escalar textura a la pared
                     ..Default::default()
@@ -162,6 +163,7 @@ async fn main() {
                 let mut hit = false;
                 let mut hit_vertical = false;
                 let mut distance = 0.0;
+                let mut splited_map: Vec<i32> = Vec::new();
 
                 while !hit && distance < max_depth {
                     // Avanza hacia la siguiente intersección
@@ -185,7 +187,8 @@ async fn main() {
                     if test_x < MAP[0].len() && test_y < MAP.len() && MAP[test_y][test_x] > 0 {
                         hit = true;
 
-                        texture = match MAP[test_y][test_x] {
+                        splited_map = split_into_pairs(MAP[test_y][test_x]);
+                        texture = match splited_map[0] { // guardar split_into_pairs en una variable
                             2 => texture_techo.clone(),
                             _ => texture_pared.clone(),
                         };
@@ -204,6 +207,7 @@ async fn main() {
                                 eye_y,
                                 hit_vertical,
                                 texture: texture.clone(),
+                                opacity: splited_map[1] as f32 * 0.1,
                                 i,
                                 line_width,
                                 screen_height,
@@ -312,8 +316,20 @@ async fn main() {
     }
 }
 
-
-
 fn calculate_distance(player: &Player, entity: &Entity) -> f32 {
     ((entity.x - player.x).powi(2) + (entity.y - player.y).powi(2)).sqrt()
+}
+
+fn split_into_pairs(number: i32) -> Vec<i32> {
+    let number_str = number.to_string(); // Convertir a string
+    let mut pairs = Vec::new();
+
+    // Iterar por cada par de caracteres
+    for chunk in number_str.as_bytes().chunks(1) {
+        let pair_str = String::from_utf8_lossy(chunk); // Convertir el slice en string
+        let pair = pair_str.parse::<i32>().unwrap(); // Convertir el par a i32
+        pairs.push(pair);
+    }
+
+    pairs
 }
