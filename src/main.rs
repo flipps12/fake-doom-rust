@@ -9,7 +9,7 @@ use entity::{ Player, Entity };
 use render::{ render, render_entity, RenderObjects, RenderWalls, RenderEntity };
 
 pub const MAP: [[i32; 20]; 20] = [
-    [19, 18, 17, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
+    [19, 00, 17, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
     [19, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 15],
     [18, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 15, 00, 15],
     [18, 00, 00, 19, 18, 17, 16, 15, 15, 15, 15, 15, 00, 15, 15, 00, 00, 15, 00, 15],
@@ -30,6 +30,15 @@ pub const MAP: [[i32; 20]; 20] = [
     [19, 00, 00, 00, 00, 00, 15, 00, 00, 00, 14, 00, 00, 00, 00, 00, 00, 00, 00, 15],
     [15, 19, 18, 17, 16, 15, 13, 14, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
 ];
+
+const DEBUG_MODE: bool = true;
+struct RayCastingLine {
+    x1: f32,
+    y1: f32,
+    x2: f32,
+    y2: f32,
+    angle: f32,
+}
 
 #[macroquad::main("Fake doom")]
 async fn main() {
@@ -65,6 +74,13 @@ async fn main() {
 
     let mut menu = true;
 
+    // debug
+    if DEBUG_MODE {
+        // println!("Player: {:?}", player);
+        // println!("Entities: {:?}", entities);
+    }
+
+    let mut ray_casting_lines: Vec<RayCastingLine> = Vec::new();
     loop {
         // Reset
         clear_background(BLACK);
@@ -74,14 +90,18 @@ async fn main() {
 
         if menu {
             let text = "Fake doom";
+            let text1 = "Press Enter to start";
             let font_size = 40;
 
             // Medir el texto
             let text_dimensions = measure_text(text, None, font_size, 1.0);
+            let text_dimensions1 = measure_text(text1, None, font_size, 1.0);
 
             // Coordenadas centradas
             let text_x = (screen_width - text_dimensions.width) / 2.0;
+            let text_x1 = (screen_width - text_dimensions1.width) / 2.0;
             draw_text(&format!("{}", text), text_x, screen_height / 4.0, font_size as f32, WHITE);
+            draw_text(&format!("{}", text1), text_x1, screen_height / 2.0, font_size as f32, WHITE);
 
             if is_key_down(KeyCode::Enter) {
                 show_mouse(false);
@@ -192,6 +212,21 @@ async fn main() {
                             2 => texture_techo.clone(),
                             _ => texture_pared.clone(),
                         };
+
+                        if DEBUG_MODE {
+                            let start_x = screen_width / 2.0;
+                            let start_y = screen_height / 2.0;
+                            let end_x = start_x + ray_angle.cos() * distance * 8.0;
+                            let end_y = start_y + ray_angle.sin() * distance * 8.0;
+
+                            ray_casting_lines.push(RayCastingLine {
+                                x1: start_x,
+                                y1: start_y,
+                                x2: end_x,
+                                y2: end_y,
+                                angle: ray_angle,
+                            });
+                        }
                     }
                 }
 
@@ -268,16 +303,16 @@ async fn main() {
                 // Collision detection
                 let new_x = player.x + player.angle.cos() * 0.35;
                 let new_y = player.y + player.angle.sin() * 0.35;
-            
+
                 if MAP[player.y as usize][new_x as usize] == 0 {
                     player.x = player.x + player.angle.cos() * 0.1;
                 }
-            
+
                 if MAP[new_y as usize][player.x as usize] == 0 {
                     player.y = player.y + player.angle.sin() * 0.1;
                 }
             }
-            
+
             if is_key_down(KeyCode::S) {
                 let new_x = player.x - player.angle.cos() * 0.35;
                 let new_y = player.y - player.angle.sin() * 0.35;
@@ -285,7 +320,7 @@ async fn main() {
                 if MAP[player.y as usize][new_x as usize] == 0 {
                     player.x = player.x - player.angle.cos() * 0.1;
                 }
-            
+
                 if MAP[new_y as usize][player.x as usize] == 0 {
                     player.y = player.y - player.angle.sin() * 0.1;
                 }
@@ -294,7 +329,7 @@ async fn main() {
             if is_key_down(KeyCode::A) {
                 let new_x = player.x + (player.angle - std::f32::consts::FRAC_PI_2).cos() * 0.2;
                 let new_y = player.y + (player.angle - std::f32::consts::PI / 2.0).sin() * 0.2;
-            
+
                 if MAP[player.y as usize][new_x as usize] == 0 {
                     player.x = player.x + (player.angle - std::f32::consts::FRAC_PI_2).cos() * 0.05;
                 }
@@ -302,11 +337,11 @@ async fn main() {
                     player.y = player.y + (player.angle - std::f32::consts::FRAC_PI_2).sin() * 0.05;
                 }
             }
-            
+
             if is_key_down(KeyCode::D) {
                 let new_x = player.x + (player.angle + std::f32::consts::FRAC_PI_2).cos() * 0.2;
                 let new_y = player.y + (player.angle + std::f32::consts::FRAC_PI_2).sin() * 0.2;
-            
+
                 if MAP[player.y as usize][new_x as usize] == 0 {
                     player.x = player.x + (player.angle + std::f32::consts::FRAC_PI_2).cos() * 0.05;
                 }
@@ -314,7 +349,7 @@ async fn main() {
                     player.y = player.y + (player.angle + std::f32::consts::FRAC_PI_2).sin() * 0.05;
                 }
             }
-            
+
             // Manipulating Angle
             if is_key_down(KeyCode::Left) {
                 player.angle -= 0.05;
@@ -328,16 +363,31 @@ async fn main() {
             player.angle += delta_x * 0.0025;
             last_mouse_x = mouse_x;
 
-            draw_text(&format!("FPS: {}", get_fps()), 10.0, 20.0, 30.0, BLACK);
-            draw_text(&format!("X: {}\n", player.x.round()), 10.0, 50.0, 30.0, BLACK);
-            draw_text(&format!("Y: {}", player.y.round()), 10.0, 80.0, 30.0, BLACK);
-            draw_text(
-                &format!("X: {} Y: {}", entities[0].x.round(), entities[0].y.round()),
-                10.0,
-                110.0,
-                30.0,
-                BLACK
-            );
+            // Debug
+            if DEBUG_MODE {
+                for line in &ray_casting_lines {
+                    draw_line(
+                        line.x1,
+                        line.y1,
+                        line.x2,
+                        line.y2,
+                        1.0,
+                        Color::new(1.0, 0.0, 0.0, 1.0)
+                    );
+                }
+                ray_casting_lines.clear();
+
+                draw_text(&format!("FPS: {}", get_fps()), 10.0, 20.0, 30.0, BLACK);
+                draw_text(&format!("X: {}\n", player.x.round()), 10.0, 50.0, 30.0, BLACK);
+                draw_text(&format!("Y: {}", player.y.round()), 10.0, 80.0, 30.0, BLACK);
+                draw_text(
+                    &format!("X: {} Y: {}", entities[0].x.round(), entities[0].y.round()),
+                    10.0,
+                    110.0,
+                    30.0,
+                    BLACK
+                );
+            }
         }
 
         if is_key_down(KeyCode::Escape) {
