@@ -58,7 +58,7 @@ async fn main() {
 
     let mut last_mouse_x = screen_width() / 2.0;
 
-    let mut entities = vec![
+    let mut entities: Vec<Entity> = vec![
         // cucas
         Entity { x: 8.8, y: 2.0, angle: 1.0, texture: entity_texture.clone() }
     ];
@@ -90,7 +90,7 @@ async fn main() {
             }
         } else {
             for entity in &mut entities {
-                entity.move_entity(player.x, player.y);
+                // entity.move_entity(player.x, player.y);
             }
 
             let color: Color = Color::new(0.7, 0.7, 0.7, 1.0); // Color sin sombreado
@@ -265,15 +265,19 @@ async fn main() {
 
             // Movement
             if is_key_down(KeyCode::W) {
-                let new_x = player.x + player.angle.cos() * 0.1;
-                let new_y = player.y + player.angle.sin() * 0.1;
-
-                // Verificar colisiones
-                if MAP[new_y as usize][new_x as usize] == 0 {
-                    player.x = new_x;
-                    player.y = new_y;
+                // Collision detection
+                let new_x = player.x + player.angle.cos() * 0.35;
+                let new_y = player.y + player.angle.sin() * 0.35;
+            
+                if MAP[player.y as usize][new_x as usize] == 0 {
+                    player.x = player.x + player.angle.cos() * 0.1;
+                }
+            
+                if MAP[new_y as usize][player.x as usize] == 0 {
+                    player.y = player.y + player.angle.sin() * 0.1;
                 }
             }
+            
             if is_key_down(KeyCode::S) {
                 let new_x = player.x - player.angle.cos() * 0.1;
                 let new_y = player.y - player.angle.sin() * 0.1;
