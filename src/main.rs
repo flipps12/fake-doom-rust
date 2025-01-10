@@ -8,7 +8,6 @@ mod render;
 use entity::{ Player, Entity };
 use render::{ render, render_entity, RenderObjects, RenderWalls, RenderEntity };
 
-
 pub const MAP: [[i32; 20]; 20] = [
     [19, 18, 17, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
     [19, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 15],
@@ -54,14 +53,14 @@ async fn main() {
         y: 2.0,
         angle: 0.0,
     };
-    
+
     const FOV: f32 = std::f32::consts::PI / 4.0; // Campo de visión
 
     let mut last_mouse_x = screen_width() / 2.0;
 
     let mut entities = vec![
         // cucas
-        Entity { x: 8.8, y: 2.0, angle: 1.0, texture: entity_texture.clone() },
+        Entity { x: 8.8, y: 2.0, angle: 1.0, texture: entity_texture.clone() }
     ];
 
     let mut menu = true;
@@ -188,7 +187,8 @@ async fn main() {
                         hit = true;
 
                         splited_map = split_into_pairs(MAP[test_y][test_x]);
-                        texture = match splited_map[0] { // guardar split_into_pairs en una variable
+                        texture = match splited_map[0] {
+                            // guardar split_into_pairs en una variable
                             2 => texture_techo.clone(),
                             _ => texture_pared.clone(),
                         };
@@ -207,7 +207,7 @@ async fn main() {
                                 eye_y,
                                 hit_vertical,
                                 texture: texture.clone(),
-                                opacity: splited_map[1] as f32 * 0.1,
+                                opacity: (splited_map[1] as f32) * 0.1,
                                 i,
                                 line_width,
                                 screen_height,
