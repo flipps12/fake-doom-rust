@@ -279,19 +279,45 @@ async fn main() {
             }
             
             if is_key_down(KeyCode::S) {
-                let new_x = player.x - player.angle.cos() * 0.1;
-                let new_y = player.y - player.angle.sin() * 0.1;
+                let new_x = player.x - player.angle.cos() * 0.35;
+                let new_y = player.y - player.angle.sin() * 0.35;
 
-                if MAP[new_y as usize][new_x as usize] == 0 {
-                    player.x = new_x;
-                    player.y = new_y;
+                if MAP[player.y as usize][new_x as usize] == 0 {
+                    player.x = player.x - player.angle.cos() * 0.1;
+                }
+            
+                if MAP[new_y as usize][player.x as usize] == 0 {
+                    player.y = player.y - player.angle.sin() * 0.1;
+                }
+            }
+            if is_key_down(KeyCode::A) {
+                let new_x = player.x + (player.angle - std::f32::consts::FRAC_PI_2).cos() * 0.2;
+                let new_y = player.y + (player.angle - std::f32::consts::PI / 2.0).sin() * 0.2;
+            
+                if MAP[player.y as usize][new_x as usize] == 0 {
+                    player.x = player.x + (player.angle - std::f32::consts::FRAC_PI_2).cos() * 0.05;
+                }
+                if MAP[new_y as usize][player.x as usize] == 0 {
+                    player.y = player.y + (player.angle - std::f32::consts::FRAC_PI_2).sin() * 0.05;
+                }
+            }
+            
+            if is_key_down(KeyCode::D) {
+                let new_x = player.x + (player.angle + std::f32::consts::FRAC_PI_2).cos() * 0.2;
+                let new_y = player.y + (player.angle + std::f32::consts::FRAC_PI_2).sin() * 0.2;
+            
+                if MAP[player.y as usize][new_x as usize] == 0 {
+                    player.x = player.x + (player.angle + std::f32::consts::FRAC_PI_2).cos() * 0.05;
+                }
+                if MAP[new_y as usize][player.x as usize] == 0 {
+                    player.y = player.y + (player.angle + std::f32::consts::FRAC_PI_2).sin() * 0.05;
                 }
             }
             // Manipulating Angle
-            if is_key_down(KeyCode::A) {
+            if is_key_down(KeyCode::Left) {
                 player.angle -= 0.05;
             }
-            if is_key_down(KeyCode::D) {
+            if is_key_down(KeyCode::Right) {
                 player.angle += 0.05;
             }
             // Manipulating Angle with Mouse
