@@ -53,7 +53,7 @@ pub fn render(obj: &RenderWalls) {
     let hit_y = obj.player.y + obj.eye_y * obj.distance;
     let texture_offset = if obj.hit_vertical { hit_y.fract() } else { hit_x.fract() };
 
-    let shade = obj.opacity; // 1.0 / (1.0 + obj.distance.powi(2) * 0.01);
+    let shade = obj.opacity / (1.0 + obj.distance.powi(2) * 0.01);
     let color = Color::new(shade, shade, shade, 1.0);
 
     draw_texture_ex(
