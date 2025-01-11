@@ -1,5 +1,6 @@
-use crate::MAP;
 use macroquad::texture::Texture2D;
+
+use crate::map;
 
 pub struct Player {
     pub x: f32,
@@ -28,8 +29,9 @@ impl Entity {
         let new_x = self.x + self.angle.cos() * 0.03;
         let new_y = self.y + self.angle.sin() * 0.03;
 
+        let map = map::get_map();
         // Verificar colisiones
-        if MAP[new_y as usize][new_x as usize] == 0 {
+        if map[new_y as usize][new_x as usize] == 0 {
             self.x = new_x;
             self.y = new_y;
         }

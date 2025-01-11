@@ -4,32 +4,10 @@ use macroquad::prelude::*;
 
 mod entity;
 mod render;
+mod map;
 
 use entity::{ Player, Entity };
 use render::{ render, render_entity, RenderObjects, RenderWalls, RenderEntity };
-
-pub const MAP: [[i32; 20]; 20] = [
-    [19, 00, 17, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
-    [19, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 15],
-    [18, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 15, 00, 15],
-    [18, 00, 00, 19, 18, 17, 16, 15, 15, 15, 15, 15, 00, 15, 15, 00, 00, 15, 00, 15],
-    [17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 15],
-    [17, 00, 00, 00, 15, 15, 15, 15, 15, 15, 15, 00, 00, 00, 00, 00, 00, 15, 00, 15],
-    [16, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 15, 00, 15],
-    [16, 15, 15, 00, 00, 15, 15, 15, 15, 15, 15, 00, 15, 15, 00, 00, 00, 15, 00, 15],
-    [17, 00, 15, 00, 15, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 15, 00, 15],
-    [17, 00, 15, 00, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 00, 00, 00, 15, 00, 15],
-    [16, 00, 15, 00, 00, 00, 00, 00, 00, 00, 15, 00, 00, 00, 15, 00, 00, 00, 00, 15],
-    [16, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15, 00, 15, 00, 00, 00, 00, 00, 00, 15],
-    [16, 00, 00, 16, 15, 15, 15, 00, 00, 00, 15, 00, 15, 00, 15, 15, 15, 15, 00, 15],
-    [17, 00, 16, 17, 00, 00, 15, 15, 15, 00, 15, 00, 15, 00, 15, 00, 00, 00, 00, 15],
-    [17, 00, 00, 18, 00, 00, 00, 00, 15, 00, 00, 00, 15, 15, 15, 00, 00, 00, 00, 15],
-    [18, 00, 00, 18, 00, 00, 00, 00, 15, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 15],
-    [18, 00, 00, 19, 00, 17, 17, 16, 16, 15, 15, 15, 15, 15, 15, 15, 00, 15, 15, 15],
-    [19, 00, 00, 00, 00, 00, 00, 00, 00, 00, 14, 00, 00, 00, 00, 00, 00, 00, 00, 15],
-    [19, 00, 00, 00, 00, 00, 15, 00, 00, 00, 14, 00, 00, 00, 00, 00, 00, 00, 00, 15],
-    [15, 19, 18, 17, 16, 15, 13, 14, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
-];
 
 const DEBUG_MODE: bool = true;
 struct RayCastingLine {
@@ -37,7 +15,6 @@ struct RayCastingLine {
     y1: f32,
     x2: f32,
     y2: f32,
-    angle: f32,
 }
 
 #[macroquad::main("Fake doom")]
@@ -87,6 +64,8 @@ async fn main() {
 
         let screen_width = screen_width();
         let screen_height = screen_height();
+
+        let map = map::get_map();
 
         if menu {
             let text = "Fake doom";
@@ -203,10 +182,10 @@ async fn main() {
                     let test_y = ray_y as usize;
 
                     // Verifica si hemos alcanzado una pared
-                    if test_x < MAP[0].len() && test_y < MAP.len() && MAP[test_y][test_x] > 0 {
+                    if test_x < map[0].len() && test_y < map.len() && map[test_y][test_x] > 0 {
                         hit = true;
 
-                        splited_map = split_into_pairs(MAP[test_y][test_x]);
+                        splited_map = split_into_pairs(map[test_y][test_x]);
                         texture = match splited_map[0] {
                             // guardar split_into_pairs en una variable
                             2 => texture_techo.clone(),
@@ -224,7 +203,6 @@ async fn main() {
                                 y1: start_y,
                                 x2: end_x,
                                 y2: end_y,
-                                angle: ray_angle,
                             });
                         }
                     }
@@ -304,11 +282,11 @@ async fn main() {
                 let new_x = player.x + player.angle.cos() * 0.35;
                 let new_y = player.y + player.angle.sin() * 0.35;
 
-                if MAP[player.y as usize][new_x as usize] == 0 {
+                if map[player.y as usize][new_x as usize] == 0 {
                     player.x = player.x + player.angle.cos() * 0.1;
                 }
 
-                if MAP[new_y as usize][player.x as usize] == 0 {
+                if map[new_y as usize][player.x as usize] == 0 {
                     player.y = player.y + player.angle.sin() * 0.1;
                 }
             }
@@ -317,11 +295,11 @@ async fn main() {
                 let new_x = player.x - player.angle.cos() * 0.35;
                 let new_y = player.y - player.angle.sin() * 0.35;
 
-                if MAP[player.y as usize][new_x as usize] == 0 {
+                if map[player.y as usize][new_x as usize] == 0 {
                     player.x = player.x - player.angle.cos() * 0.1;
                 }
 
-                if MAP[new_y as usize][player.x as usize] == 0 {
+                if map[new_y as usize][player.x as usize] == 0 {
                     player.y = player.y - player.angle.sin() * 0.1;
                 }
             }
@@ -330,10 +308,10 @@ async fn main() {
                 let new_x = player.x + (player.angle - std::f32::consts::FRAC_PI_2).cos() * 0.2;
                 let new_y = player.y + (player.angle - std::f32::consts::PI / 2.0).sin() * 0.2;
 
-                if MAP[player.y as usize][new_x as usize] == 0 {
+                if map[player.y as usize][new_x as usize] == 0 {
                     player.x = player.x + (player.angle - std::f32::consts::FRAC_PI_2).cos() * 0.05;
                 }
-                if MAP[new_y as usize][player.x as usize] == 0 {
+                if map[new_y as usize][player.x as usize] == 0 {
                     player.y = player.y + (player.angle - std::f32::consts::FRAC_PI_2).sin() * 0.05;
                 }
             }
@@ -342,10 +320,10 @@ async fn main() {
                 let new_x = player.x + (player.angle + std::f32::consts::FRAC_PI_2).cos() * 0.2;
                 let new_y = player.y + (player.angle + std::f32::consts::FRAC_PI_2).sin() * 0.2;
 
-                if MAP[player.y as usize][new_x as usize] == 0 {
+                if map[player.y as usize][new_x as usize] == 0 {
                     player.x = player.x + (player.angle + std::f32::consts::FRAC_PI_2).cos() * 0.05;
                 }
-                if MAP[new_y as usize][player.x as usize] == 0 {
+                if map[new_y as usize][player.x as usize] == 0 {
                     player.y = player.y + (player.angle + std::f32::consts::FRAC_PI_2).sin() * 0.05;
                 }
             }
