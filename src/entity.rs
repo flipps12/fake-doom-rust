@@ -16,9 +16,6 @@ pub struct Entity {
 }
 
 impl Entity {
-    // pub fn new(x: f32, y: f32, texture: Texture2D) -> Entity {
-    //     Entity { x, y, texture }
-    // }
     pub fn move_entity(&mut self, player_x: f32, player_y: f32) {
         let delta_y = player_y - self.y;
         let delta_x = player_x - self.x;
