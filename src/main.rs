@@ -8,7 +8,7 @@ mod map;
 mod utils;
 
 use entity::{ Player, Entity };
-use map::{ calc_shadows, set_value };
+use map::{ calc_shadows, get_value, set_value };
 use render::{ render, render_entity, RenderObjects, RenderWalls, RenderEntity };
 use utils::split_into_pairs;
 
@@ -99,8 +99,12 @@ async fn main() {
             for entity in &mut entities {
                 // entity.move_entity(player.x, player.y);
             }
-
-            let color: Color = Color::new(0.7, 0.7, 0.7, 1.0); // Color sin sombreado
+            // let mut shadow_textures = 1.0;
+            // if let Some(value) = get_value(player.x.round() as usize - 1, player.y.round() as usize) {
+            //     shadow_textures = value as f32 / 10.0;
+            // }
+            // let color: Color = Color::new(shadow_textures, shadow_textures, shadow_textures, 1.0); // Cambiar sombreado segun la intensidad de la luz donde se encuentra
+            let color: Color = Color::new(0.7, 0.7, 0.7, 1.0);
             draw_texture_ex(
                 &texture_techo,
                 0.0,
