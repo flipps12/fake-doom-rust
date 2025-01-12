@@ -5,9 +5,12 @@ use macroquad::prelude::*;
 mod entity;
 mod render;
 mod map;
+mod utils;
 
 use entity::{ Player, Entity };
+use map::{ calc_shadows, set_value };
 use render::{ render, render_entity, RenderObjects, RenderWalls, RenderEntity };
+use utils::split_into_pairs;
 
 const DEBUG_MODE: bool = true;
 struct RayCastingLine {
@@ -51,10 +54,15 @@ async fn main() {
 
     let mut menu = true;
 
+    calc_shadows();
+
     // debug
     if DEBUG_MODE {
-        // println!("Player: {:?}", player);
-        // println!("Entities: {:?}", entities);
+        let map = map::get_map();
+
+        for row in &map {
+            println!("{:?}", row);
+        }
     }
 
     let mut ray_casting_lines: Vec<RayCastingLine> = Vec::new();
@@ -182,7 +190,7 @@ async fn main() {
                     let test_y = ray_y as usize;
 
                     // Verifica si hemos alcanzado una pared
-                    if test_x < map[0].len() && test_y < map.len() && map[test_y][test_x] > 0 {
+                    if test_x < map[0].len() && test_y < map.len() && map[test_y][test_x] > 09 {
                         hit = true;
 
                         splited_map = split_into_pairs(map[test_y][test_x]);
@@ -282,11 +290,11 @@ async fn main() {
                 let new_x = player.x + player.angle.cos() * 0.35;
                 let new_y = player.y + player.angle.sin() * 0.35;
 
-                if map[player.y as usize][new_x as usize] == 0 {
+                if map[player.y as usize][new_x as usize] <= 9 {
                     player.x = player.x + player.angle.cos() * 0.1;
                 }
 
-                if map[new_y as usize][player.x as usize] == 0 {
+                if map[new_y as usize][player.x as usize] <= 9 {
                     player.y = player.y + player.angle.sin() * 0.1;
                 }
             }
@@ -295,11 +303,11 @@ async fn main() {
                 let new_x = player.x - player.angle.cos() * 0.35;
                 let new_y = player.y - player.angle.sin() * 0.35;
 
-                if map[player.y as usize][new_x as usize] == 0 {
+                if map[player.y as usize][new_x as usize] <= 9 {
                     player.x = player.x - player.angle.cos() * 0.1;
                 }
 
-                if map[new_y as usize][player.x as usize] == 0 {
+                if map[new_y as usize][player.x as usize] <= 9 {
                     player.y = player.y - player.angle.sin() * 0.1;
                 }
             }
@@ -308,10 +316,10 @@ async fn main() {
                 let new_x = player.x + (player.angle - std::f32::consts::FRAC_PI_2).cos() * 0.2;
                 let new_y = player.y + (player.angle - std::f32::consts::PI / 2.0).sin() * 0.2;
 
-                if map[player.y as usize][new_x as usize] == 0 {
+                if map[player.y as usize][new_x as usize] <= 9 {
                     player.x = player.x + (player.angle - std::f32::consts::FRAC_PI_2).cos() * 0.05;
                 }
-                if map[new_y as usize][player.x as usize] == 0 {
+                if map[new_y as usize][player.x as usize] <= 9 {
                     player.y = player.y + (player.angle - std::f32::consts::FRAC_PI_2).sin() * 0.05;
                 }
             }
@@ -320,10 +328,10 @@ async fn main() {
                 let new_x = player.x + (player.angle + std::f32::consts::FRAC_PI_2).cos() * 0.2;
                 let new_y = player.y + (player.angle + std::f32::consts::FRAC_PI_2).sin() * 0.2;
 
-                if map[player.y as usize][new_x as usize] == 0 {
+                if map[player.y as usize][new_x as usize] <= 9 {
                     player.x = player.x + (player.angle + std::f32::consts::FRAC_PI_2).cos() * 0.05;
                 }
-                if map[new_y as usize][player.x as usize] == 0 {
+                if map[new_y as usize][player.x as usize] <= 9 {
                     player.y = player.y + (player.angle + std::f32::consts::FRAC_PI_2).sin() * 0.05;
                 }
             }
@@ -378,18 +386,4 @@ async fn main() {
 
 fn calculate_distance(player: &Player, entity: &Entity) -> f32 {
     ((entity.x - player.x).powi(2) + (entity.y - player.y).powi(2)).sqrt()
-}
-
-fn split_into_pairs(number: i32) -> Vec<i32> {
-    let number_str = number.to_string(); // Convertir a string
-    let mut pairs = Vec::new();
-
-    // Iterar por cada par de caracteres
-    for chunk in number_str.as_bytes().chunks(1) {
-        let pair_str = String::from_utf8_lossy(chunk); // Convertir el slice en string
-        let pair = pair_str.parse::<i32>().unwrap(); // Convertir el par a i32
-        pairs.push(pair);
-    }
-
-    pairs
 }

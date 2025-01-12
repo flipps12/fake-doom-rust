@@ -28,7 +28,7 @@ impl Entity {
 
         let map = map::get_map();
         // Verificar colisiones
-        if map[new_y as usize][new_x as usize] == 0 {
+        if map[new_y as usize][new_x as usize] <= 0 {
             self.x = new_x;
             self.y = new_y;
         }
