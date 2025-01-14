@@ -20,6 +20,14 @@ struct RayCastingLine {
     y2: f32,
 }
 
+struct Animation {
+    current_frame: usize,  // Fotograma actual (0, 1 o 2)
+    total_frames: usize,   // Total de fotogramas (3 en este caso)
+    frame_time: f32,       // Duración de cada fotograma en segundos
+    elapsed_time: f32,     // Tiempo transcurrido desde el último cambio de fotograma
+    is_active: bool,
+}
+
 #[macroquad::main("Fake doom")]
 async fn main() {
     // Window settings
@@ -37,10 +45,23 @@ async fn main() {
     let entity_texture = load_texture("assets/cucas.png").await.unwrap();
     entity_texture.set_filter(FilterMode::Nearest);
 
+    let gun_texture = load_texture("assets/gun.png").await.unwrap();
+    gun_texture.set_filter(FilterMode::Nearest);
+    let sprite_width = gun_texture.width() / 3.0; // 3 fotogramas en una fila
+    let sprite_height = gun_texture.height();
+
     let mut player = Player {
         x: 2.0,
         y: 2.0,
         angle: 0.0,
+    };
+
+    let mut animation = Animation {
+        current_frame: 0,
+        total_frames: 3,
+        frame_time: 0.2, // Cambia de fotograma cada 200 ms
+        elapsed_time: 0.0,
+        is_active: false,
     };
 
     const FOV: f32 = std::f32::consts::PI / 3.5; // Campo de visión
@@ -96,6 +117,8 @@ async fn main() {
                 menu = false;
             }
         } else {
+            let delta_time = get_frame_time(); // Tiempo entre frames
+
             for entity in &mut entities {
                 entity.move_entity(player.x, player.y);
             }
@@ -289,6 +312,34 @@ async fn main() {
                 }
             }
 
+            // last render (gun)
+            if is_mouse_button_pressed(MouseButton::Left) {
+                animation.is_active = true;
+                animation.current_frame = 0;  // Reinicia la animación
+                animation.elapsed_time = 0.0;
+            }
+    
+            // Actualiza la animación solo si está activa
+            if animation.is_active {
+                update_animation(&mut animation, delta_time);
+            }
+
+            let gun_size = screen_height / 1.5;
+            let scale = gun_size / sprite_height;
+            let gun_x = (screen_width - sprite_width * scale) / 2.0;
+            let gun_y = screen_height - gun_size;
+            
+            // draw_rectangle(gun_x, gun_y, sprite_width * scale, sprite_height * scale, color);
+            render_sprite(
+                gun_texture.clone(),
+                &animation,
+                sprite_width,
+                sprite_height,
+                (gun_x, gun_y), // Posición del sprite
+                scale,
+            );
+
+
             let speed_multiplier = if is_key_down(KeyCode::LeftShift) { 1.5 } else { 1.0 };
 
             // Movement
@@ -393,4 +444,49 @@ async fn main() {
 
 fn calculate_distance(player: &Player, entity: &Entity) -> f32 {
     ((entity.x - player.x).powi(2) + (entity.y - player.y).powi(2)).sqrt()
+}
+
+fn update_animation(animation: &mut Animation, delta_time: f32) {
+    // Incrementa el tiempo transcurrido
+    animation.elapsed_time += delta_time;
+
+    // Cambia de fotograma cuando se alcanza el tiempo por fotograma
+    if animation.elapsed_time >= animation.frame_time {
+        animation.current_frame += 1;
+        animation.elapsed_time = 0.0;
+
+        // Detén la animación cuando llega al último fotograma
+        if animation.current_frame >= animation.total_frames {
+            animation.current_frame = 0;
+            animation.is_active = false; // Detiene la animación
+        }
+    }
+}
+
+fn render_sprite(
+    sprite_sheet: Texture2D,
+    animation: &Animation,
+    sprite_width: f32,
+    sprite_height: f32,
+    position: (f32, f32),
+    scale: f32,
+) {
+    let source_x = animation.current_frame as f32 * sprite_width;
+
+    draw_texture_ex(
+        &sprite_sheet,
+        position.0,
+        position.1,
+        WHITE,
+        DrawTextureParams {
+            source: Some(Rect {
+                x: source_x,
+                y: 0.0, // Asumiendo que los fotogramas están en una fila
+                w: sprite_width,
+                h: sprite_height,
+            }),
+            dest_size: Some(vec2(sprite_width * scale, sprite_height * scale)),
+            ..Default::default()
+        },
+    );
 }
