@@ -8,7 +8,7 @@ mod map;
 mod utils;
 
 use entity::{ Player, Entity };
-use map::{ calc_shadows, get_value, set_value };
+use map::calc_shadows;
 use render::{ render, render_entity, RenderObjects, RenderWalls, RenderEntity };
 use utils::split_into_pairs;
 
@@ -43,7 +43,7 @@ async fn main() {
         angle: 0.0,
     };
 
-    const FOV: f32 = std::f32::consts::PI / 4.0; // Campo de visión
+    const FOV: f32 = std::f32::consts::PI / 3.5; // Campo de visión
 
     let mut last_mouse_x = screen_width() / 2.0;
 
@@ -97,7 +97,7 @@ async fn main() {
             }
         } else {
             for entity in &mut entities {
-                // entity.move_entity(player.x, player.y);
+                entity.move_entity(player.x, player.y);
             }
             // let mut shadow_textures = 1.0;
             // if let Some(value) = get_value(player.x.round() as usize - 1, player.y.round() as usize) {
@@ -105,6 +105,7 @@ async fn main() {
             // }
             // let color: Color = Color::new(shadow_textures, shadow_textures, shadow_textures, 1.0); // Cambiar sombreado segun la intensidad de la luz donde se encuentra
             let color: Color = Color::new(0.7, 0.7, 0.7, 1.0);
+
             draw_texture_ex(
                 &texture_techo,
                 0.0,
@@ -288,6 +289,8 @@ async fn main() {
                 }
             }
 
+            let speed_multiplier = if is_key_down(KeyCode::LeftShift) { 1.5 } else { 1.0 };
+
             // Movement
             if is_key_down(KeyCode::W) {
                 // Collision detection
@@ -295,11 +298,11 @@ async fn main() {
                 let new_y = player.y + player.angle.sin() * 0.35;
 
                 if map[player.y as usize][new_x as usize] <= 9 {
-                    player.x = player.x + player.angle.cos() * 0.1;
+                    player.x = player.x + player.angle.cos() * 0.07 * speed_multiplier;
                 }
 
                 if map[new_y as usize][player.x as usize] <= 9 {
-                    player.y = player.y + player.angle.sin() * 0.1;
+                    player.y = player.y + player.angle.sin() * 0.07 * speed_multiplier;
                 }
             }
 
@@ -308,11 +311,11 @@ async fn main() {
                 let new_y = player.y - player.angle.sin() * 0.35;
 
                 if map[player.y as usize][new_x as usize] <= 9 {
-                    player.x = player.x - player.angle.cos() * 0.1;
+                    player.x = player.x - player.angle.cos() * 0.07 * speed_multiplier;
                 }
 
                 if map[new_y as usize][player.x as usize] <= 9 {
-                    player.y = player.y - player.angle.sin() * 0.1;
+                    player.y = player.y - player.angle.sin() * 0.07 * speed_multiplier;
                 }
             }
 

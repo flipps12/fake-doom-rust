@@ -23,14 +23,18 @@ impl Entity {
 
         self.angle = angle;
         
-        let new_x = self.x + self.angle.cos() * 0.03;
-        let new_y = self.y + self.angle.sin() * 0.03;
+        let new_x = self.x + self.angle.cos() * 0.35;
+        let new_y = self.y + self.angle.sin() * 0.35;
 
         let map = map::get_map();
+        
         // Verificar colisiones
-        if map[new_y as usize][new_x as usize] <= 0 {
-            self.x = new_x;
-            self.y = new_y;
+        if map[self.y as usize][new_x as usize] <= 9 {
+            self.x = self.x + self.angle.cos() * 0.035 * 1.0; //speed_multiplier;
+        }
+
+        if map[new_y as usize][self.x as usize] <= 9 {
+            self.y = self.y + self.angle.sin() * 0.035 * 1.0; //speed_multiplier;
         }
     }
 }

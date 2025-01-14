@@ -1,0 +1,131 @@
+[33mcommit d352fefe7c15bd862594c45c6f855e99f8c349fe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Sun Jan 12 18:19:39 2025 -0300
+
+    (propagacion por paredes)
+
+[33mcommit 6a6367e9a8e7791a7f5c5b62d4d8e659cc9ffd7b[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Sun Jan 12 01:58:18 2025 -0300
+
+    Refactored dynamic shadows (by gh copilot)
+
+[33mcommit ece33e17d5c4094dbe0e0360682be221f33c6fec[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Sun Jan 12 01:54:37 2025 -0300
+
+    first dinamic shadows
+
+[33mcommit 5ed97438d9ebdce4925c32205fa26e384d78d574[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Sat Jan 11 01:50:02 2025 -0300
+
+    Modificable map
+
+[33mcommit cc2b754120ab975eac286ca6bb2e9d00fe6f7edf[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Sat Jan 11 01:49:10 2025 -0300
+
+    Modificable map
+
+[33mcommit b7454a53fb2127802b3fd069974e798a92e1f00a[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Sat Jan 11 01:31:00 2025 -0300
+
+    Modicable map
+
+[33mcommit a53c53eb48c3eb049ccf1e0d45050ccabaa1131e[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Fri Jan 10 02:13:09 2025 -0300
+
+    Debug mode
+
+[33mcommit 08a22386b2c894d7b2ca54206914cb7f4ccc3a22[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Fri Jan 10 00:02:06 2025 -0300
+
+    -
+
+[33mcommit d69612fa6f33e7368553f158f58fee9b517c678d[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Thu Jan 9 22:39:09 2025 -0300
+
+    Move with keys A - D
+
+[33mcommit 58301b8696ee66728997998b6ae42aacb9a84489[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Thu Jan 9 22:24:35 2025 -0300
+
+    Better collision from player
+
+[33mcommit b0b2b15c4d5fb763967de8d28b1195ead3491647[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Thu Jan 9 21:31:16 2025 -0300
+
+    Shadow
+
+[33mcommit 97cb4a30036a7cb3f86293c160ee8b38777970a2[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Thu Jan 9 21:30:54 2025 -0300
+
+    Shadow
+
+[33mcommit c08f0e4712a5f345bd1f034977606657e4a0fdff[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Thu Jan 9 20:39:27 2025 -0300
+
+    render.rs
+
+[33mcommit df7f31ce1ad0f71bbd588334251a34437afe3e3f[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Thu Jan 9 20:23:52 2025 -0300
+
+    Fov fix
+
+[33mcommit 93de69c5a03217aed03101a3c7efb29d2960c161[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Wed Jan 8 23:12:36 2025 -0300
+
+    Bug visual
+
+[33mcommit dd65b66dfd8b2f17364cc164c48bb32a1ab16ddb[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Wed Jan 8 22:11:20 2025 -0300
+
+    Menu
+
+[33mcommit cbc703bbfff8076fc33be44fb912970ef21213ce[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Wed Jan 8 02:25:34 2025 -0300
+
+    change angle with mouse
+
+[33mcommit d442f0673a33baaaecb847a4bf5b116f320be0ce[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Tue Jan 7 23:34:42 2025 -0300
+
+    mapa
+
+[33mcommit 49543f514e4867786b3c3f964a6f4974d4bcee1e[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Mon Jan 6 22:14:33 2025 -0300
+
+    Move entitys (NPCs)
+
+[33mcommit 90c3ffc135ed7f191d81ce60f2d7359a4c1ef27d[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Mon Jan 6 21:52:11 2025 -0300
+
+    bug visual
+
+[33mcommit 5a648736ca6ce0ff6ba2b3bf649f28e174608468[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Mon Jan 6 01:37:26 2025 -0300
+
+    -
+
+[33mcommit 66c6373cfcb9c37f3f636b08ecdb34e56ad471c9[m
+Author: Flipps12 <paginasypruebas12@gmail.com>
+Date:   Sat Jan 4 21:18:57 2025 -0300
+
+    First commit
